@@ -1,0 +1,329 @@
+#library 
+import time
+import os
+from typing import final
+from prettytable import PrettyTable
+
+#global variables
+products = []
+list_of_products = []
+user_cart = []
+total_quantity = 0
+user_balance = int()
+discount = 0.0
+total_price = 0.0
+table = PrettyTable()
+flag1 = int()
+flag2 = int()
+num3 = int()
+num1 = int()
+total_price = float()
+total_quantity = 0
+price_after_discount = float()
+final_price = float()
+
+
+#this is the function of storage that contains the products and their prices and quantities
+def storage():
+    global products
+    global table
+    products = [{
+                    "name" : "notebook a4",
+                    "price" : 50,
+                    "quantity" : 100
+                },
+                {
+                    "name" : "pencil",
+                    "price" : 30,
+                    "quantity" : 1000
+                },
+                {
+                    "name" : "pencil case",
+                    "price" : 80,
+                    "quantity" : 100
+                },
+                {
+                    "name" : "blue pen",
+                    "price" : 10,
+                    "quantity" : 100
+                },
+                {
+                    "name" : "calculator",
+                    "price" : 1000,
+                    "quantity" : 100
+                },
+                {
+                    "name" : "Stapler",
+                    "price" : 255,
+                    "quantity" : 100
+                }
+    ]
+
+
+
+    for i in range(len(products)):
+
+        list_of_products.append(products[i]["name"])
+
+    print("products available are : ")
+    #make proucts in a table
+    table.field_names = ["Name", "Price", "Quantity"]
+    for product in products:
+        table.add_row([product["name"], product["price"], product["quantity"]])
+
+
+
+
+
+    return products 
+
+#this is the function of user input that takes the user's choice and quantity and adds it to the cart
+def user_input():
+    global list_of_products
+    global user_cart
+    global products
+    global total_price
+    global total_quantity
+    item_price = float()
+    item_quantity = int()
+
+    while True:
+      try:
+          print(table)
+          print("enter the product you want : ")
+          user_choice = input()
+          print("enter the quantity you want : ")
+          user_choice_2 = int(input())
+      except ValueError:
+          print("Invalid input")
+          time.sleep(3)
+          continue  
+      else:
+          for i in range(len(products)):
+              if user_choice == products[i]["name"]:
+                  if user_choice_2 <= products[i]["quantity"]:
+                      products[i]["quantity"] -= user_choice_2
+                      user_cart.append(products[i]["name"])
+                      
+                      item_price = user_choice_2 * products[i]["price"]
+                      total_price += item_price
+                      
+                      total_quantity += user_choice_2
+                      
+
+                      print("the item has been added successfully")
+                      print("1. to return to menu , 2. to continue shopping")   
+                      user_choice_3 = int(input())
+
+                      if user_choice_3 == 1:
+                          return  
+                      elif user_choice_3 == 2:
+                          continue  
+
+              else:
+                  print("the quantity does not exist")
+                  time.sleep(2)
+                  break  
+
+          print("1. to return to menu , 2. to continue shopping")   
+          user_choice_3 = int(input())
+
+          if user_choice_3 == 1:
+              return
+          elif user_choice_3 == 2:
+              continue
+
+                    
+#just an additional function to add the user's money
+def user_money():
+    global user_balance
+    print("enter the amount of money you have : ")
+    user_balance = int(input())
+    print("the oepration is done successfully")
+    time.sleep(3)
+    return
+# an extension to view the user's money
+def view_balance():
+    global user_balance
+    print("your balance is : ", user_balance)
+    time.sleep(3)
+    return
+
+#discounts function
+def discounts1():
+    global num3
+    global num1
+    global total_price
+    global total_quantity
+    global price_after_discount
+    global discount  
+
+    total_price_2 = float()
+    total_price_2 = total_price
+    #discount applies only if the user bought 250 or its multiples
+    if discount != 25.0:
+        if total_quantity % 250.0 == 0:
+            discount = discount + 5.0
+
+    price_after_discount = total_price_2 - ((discount/100) * total_price)
+
+    #loyalty discount
+    if flag1 == 1 and total_quantity % 50.0 == 0:
+        price_after_discount = price_after_discount - ((2/100) * price_after_discount)
+
+    
+#the function that contains all the products that user bought and its prices and quantities
+def my_cart():
+    global user_cart
+    global flag2
+    global discount
+    global num3
+    global num1
+    global total_price
+    global total_quantity
+    global final_price
+    discounts1()
+    if flag2 == 2:
+
+        print("your cart contains" , user_cart)
+        print("total quantity = " , total_quantity)
+        print("total price = " , total_price)
+        print("price after discount = " , price_after_discount )
+        print("price after discount , payment currency  = " , final_price)
+        print("remaining = " , user_balance - price_after_discount )
+    
+
+    time.sleep(3)
+    return
+
+#this function is to view the products for a certain amount of time
+def pretty_table55():
+    global table
+
+    print("how many seconds do you want to see the products ?")
+    user_choice5 = int(input())
+    print(table)
+    time.sleep(user_choice5)
+    return
+
+#this function is to check if the user has a loyalty membership for loyalty discounts
+def loyalty_membership():
+    global flag1
+    print("do you have loyalety subscrection ? ")
+    user_choice6 = input()
+    if user_choice6.lower() == "yes":
+        flag1 += 1
+        return
+    else:
+        return
+
+
+def storage2():
+    print(products)
+
+def delivery_vs_pickup():
+    global price_after_discount
+    global total_price  
+
+    try:
+        print("Do you want to deliver the items to your location or pick them up from the store?")
+        user_choice10 = input().strip().lower()
+
+    except ValueError:
+        print("Invalid input")
+        return
+
+    else:
+        if user_choice10 == "delivery":
+            total_price += 200  
+        elif user_choice10 == "pickup":
+            total_price += 50  
+
+
+
+def payment_currency():
+    global price_after_discount
+    global total_price
+    global flag2
+    global final_price
+
+    final_price = total_price  
+
+    try:
+        print("Do you want to pay with USD, EUR, or EGP?")
+        user_choice11 = input().strip().upper()
+
+    except ValueError:
+        print("Invalid input, defaulting to USD")
+        time.sleep(2)
+        return
+
+    else:
+        if user_choice11 == "EUR":
+            final_price *= 0.92
+        elif user_choice11 == "EGP":
+            final_price *= 30.9
+
+    flag2 = 2
+
+
+
+
+
+
+
+
+
+def main():
+  
+  
+  
+  while True:
+      
+
+      
+      print("welcome to the store")
+      print("---------------------------------------------")
+      print("1. view products and buy")
+      print("2. view cart")
+      print("3. to enter your balance")
+      print("4. to view your balance")
+      print("5. to see all products")
+      print("6. to view storage and accurate quantities")
+      print("7. to choose to delievr the object to your location or get it from the store")
+            
+      try : 
+          choice = int(input("enter your choice : "))
+      except ValueError:
+          print("Invalid input")
+          time.sleep(3)
+          continue
+      else:
+  
+        if choice == 1:     
+            user_input()
+  
+        elif choice == 2:      
+            my_cart()
+  
+        elif choice == 3:     
+            user_money()
+          
+        elif choice == 4:     
+            view_balance()
+
+        elif choice == 5:   
+            pretty_table55()
+        
+        elif choice == 6:
+            storage2()
+
+        elif choice == 7:
+            delivery_vs_pickup()
+
+
+
+storage()
+main()
+
+
