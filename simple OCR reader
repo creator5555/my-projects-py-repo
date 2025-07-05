@@ -1,0 +1,35 @@
+from socketserver import UDPServer
+import easyocr
+from tkinter import filedialog
+import time
+
+result = str()
+scan = easyocr.Reader(['en'], gpu=True)
+user_choice = int()
+while True:
+    print("do you want to continue ? ")
+    user_choice = int(input())
+    if user_choice == 1:
+
+        result = str()
+        scan = easyocr.Reader(['en'], gpu=True)
+
+
+        print("Enter the path of the image")
+        image_path = filedialog.askopenfilename()
+        image_path2 = image_path
+     
+        try:
+
+            result = scan.readtext(image_path)
+            print("****************", result, "****************")
+        
+        except FileNotFoundError:
+
+            print("File not found!")
+            continue
+    else:
+        print("prgram have been closed")
+        time.sleep(5)
+
+input("Press Enter to exit...")
