@@ -1,35 +1,26 @@
-from socketserver import UDPServer
 import easyocr
-from tkinter import filedialog
-import time
+import os
+import torch
 
-result = str()
-scan = easyocr.Reader(['en'], gpu=True)
-user_choice = int()
-while True:
-    print("do you want to continue ? ")
-    user_choice = int(input())
-    if user_choice == 1:
-
-        result = str()
-        scan = easyocr.Reader(['en'], gpu=True)
+reader1 = easyocr.Reader(['en'] ,gpu=torch.cuda.is_available())
+bool1 = True
 
 
-        print("Enter the path of the image")
-        image_path = filedialog.askopenfilename()
-        image_path2 = image_path
-     
-        try:
+while(bool1 == True):
+    try:
+        print("if you wan to continue press (1) else press (2)")
+        user_choice = int(input())
+        if(user_choice == 1):
+            print("enter the image path")
+            user_choice2 = input()
+            result = reader1.readtext(user_choice2)
+            print("--------------", result ,"--------------")
+        else:
+            bool1 = False
 
-            result = scan.readtext(image_path)
-            print("****************", result, "****************")
+
+    except:
+        print("something went wrong")
+
+
         
-        except FileNotFoundError:
-
-            print("File not found!")
-            continue
-    else:
-        print("prgram have been closed")
-        time.sleep(5)
-
-input("Press Enter to exit...")
