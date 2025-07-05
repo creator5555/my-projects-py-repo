@@ -1,0 +1,88 @@
+class Gpa :
+     
+    def __init__(self , courses_num):
+        self.courses_num = courses_num
+        self.hours = []
+        self.grades = []
+        self.total_grades = 0
+        self.total_hours = 0
+        self.total_gpa = float()
+        self.symbol = ''
+
+
+    def hours_collecting(self):
+         
+        for i in range(self.courses_num):
+            print("enter the course hours")
+            num2 = float(input())
+            self.hours.append(num2)
+    
+    def grades_collecting(self):
+
+        for j in range(self.courses_num):
+            print("enter the grade of every course")
+            num3 = float(input())
+            self.grades.append(num3)
+
+    def calculating_gpa(self):
+        for k in range(self.courses_num):
+            num4 = self.hours[k] * self.grades[k]
+            self.total_grades += num4
+
+        for l in range(self.courses_num):
+            self.total_hours += self.hours[l]  
+
+        self.total_gpa = self.total_grades / self.total_hours
+
+    def grades_to_symbols(self):
+
+            if(self.total_gpa >= 1 and self.total_gpa < 1.3):
+                self.symbol = 'D'
+
+            if(self.total_gpa >= 1.3 and self.total_gpa < 1.7):
+                self.symbol = 'D+'
+
+            if(self.total_gpa >= 1.7 and self.total_gpa < 2):
+                self.symbol = '-C'
+
+            if(self.total_gpa >= 2 and self.total_gpa < 2.3):
+                self.symbol = 'C'
+
+            if(self.total_gpa >= 2.3 and self.total_gpa < 2.7):
+                self.symbol = 'C+'
+
+            if(self.total_gpa >= 2.7 and self.total_gpa < 3):
+                self.symbol = '-B'
+
+            if(self.total_gpa >= 3 and self.total_gpa < 3.3):
+                self.symbol = 'B'
+
+            if(self.total_gpa >= 3.3 and self.total_gpa < 3.7):
+                self.symbol = 'B+'
+
+            if(self.total_gpa >= 3.7 and self.total_gpa < 4):
+                self.symbol = '-A'
+
+            if(self.total_gpa == 4 ):
+                self.symbol = 'A'  
+
+    def dispay(self):
+
+        total_gpa2 = self.total_gpa * 100
+        int_total_gpa = int(total_gpa2)
+        float_total_gpa = int_total_gpa / 100 
+
+        print("total gpa = ",float_total_gpa)
+        print("your grade = " , self.symbol)
+
+print("enter number of courses")
+num1 = int(input())
+gpa1 = Gpa(num1)
+
+gpa1.hours_collecting()
+gpa1.grades_collecting()
+gpa1.calculating_gpa()
+gpa1.grades_to_symbols()
+gpa1.dispay()
+
+
