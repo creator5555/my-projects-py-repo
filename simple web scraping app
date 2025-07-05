@@ -1,0 +1,41 @@
+import requests
+from bs4 import BeautifulSoup
+import os
+
+def tempretue_in_menofia():
+
+    print("weather in menofia")
+
+    link1 = "https://weather.com/weather/today/l/07c0b1af8d6efe8ea79cd117e573c9681b3ed137dbc548832265e8f03a6216dc"
+
+    response1 = requests.get(link1)
+
+
+
+    content = BeautifulSoup(response1.content, "html.parser")
+    # print(make_cooler.prettify())
+
+    temp = content.find("span", class_="CurrentConditions--tempValue--zUBSz").text
+    temp1 = temp.split("°")
+    temp2 = temp1[0]
+    int(temp2)
+    tempc = (5.0 / 9.0) * (int(temp2) - 32)
+    print("temp in celsius = ", tempc)
+    print("temp in fahrenheit = ", temp2)
+
+
+
+
+def current_time_egypt():
+    print("enter your location")
+    location = input()
+    print("time app")
+    link2 = "https://www.timeanddate.com/worldclock/" + location
+    response2 = requests.get(link2)
+    content2 = BeautifulSoup(response2.content, "html.parser")
+    time_egypt = content2.find("span" , id="ct" , class_="h1").text
+    os.system("cls")
+    print(time_egypt)
+
+
+current_time_egypt()
