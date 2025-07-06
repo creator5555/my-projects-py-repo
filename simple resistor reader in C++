@@ -1,0 +1,586 @@
+void resistor_band_calculation()
+{
+	/*black_band; //colors of the bands
+	 brown_band;
+	 red_band;
+	 orange_band;
+	 yellow_band;
+	 green_band;
+	 blue_band;
+	 violet_band;
+	 grey_band;
+	 white_band;
+	 gold_band;
+	 silver_band;*/
+
+	string choice_band;
+	string choice_band2;
+	string choice_band3;
+	string choice_band4;
+	string choice_band5;
+
+	string first_band; //works for both 4 and 5 bands options
+	string second_band; //works for both 4 and 5 bands options
+	int third_band; //works for 4 bands options only
+	string third_band_str; //works for 5 bands option only
+	float forth_band; //works for 5 bands options only
+	string forth_band_str; //works for 4 bands options only
+	string fifth_band; //works for 5 bands options only
+
+	float total_resistor_result;
+	int resistors_bands;
+	string bands_plus_str;
+	int bands_plus;
+
+	string resistor_shape_1[9] = //the shape of the resistor in 4 bands case
+	{
+		"-------------------------------------------",
+		"|                                         |",
+		"|      |-------------------|              |",
+		"|      |  |  |  |       |  |              |",
+		"|      |  |  |  |       |  |              |",
+		"|      |-------------------|              |",
+		"|                                         |",
+		"|                                         |",
+		"-------------------------------------------"
+	};
+
+	string resistor_shape_2[9] = //the shape of the resistor in 5 bands case
+	{
+		"-------------------------------------------",
+		"|                                         |",
+		"|      |-------------------|              |",
+		"|      |  |  |  |   |   |  |              |",
+		"|      |  |  |  |   |   |  |              |",
+		"|      |-------------------|              |",
+		"|                                         |",
+		"|                                         |",
+		"-------------------------------------------"
+	};
+
+	cout << "-------------------------------------------resistor app---------------------------------------" << endl;
+	cout << endl;
+	cout << "NOTE : READ THE BANDS FORM THE LEFT TO RIGHT" << endl;
+	cout << endl;
+	cout << "is the resistor 4 bands or 5 bands ?" << endl;
+	cin >> resistors_bands;
+
+	if (resistors_bands == 4)
+	{
+		for (int i = 0;i < 9; i++)
+		{
+			cout << resistor_shape_1[i] << endl;
+		}
+
+		cout << "enter the first band" << endl;
+		cin >> choice_band;
+		cout << "enter the second band" << endl;
+		cin >> choice_band2;
+		cout << "enter the third band" << endl;
+		cin >> choice_band3;
+		cout << "enter the fourth band" << endl;
+		cin >> choice_band4;
+
+		if (choice_band == "black")
+		{
+			first_band = "0";
+		}
+
+		else if (choice_band == "brown")
+		{
+			first_band = "1";
+		}
+
+		else if (choice_band == "red")
+		{
+			first_band = "2";
+		}
+
+		else if (choice_band == "orange")
+		{
+			first_band = "3";
+		}
+
+		else if (choice_band == "yellow")
+		{
+			first_band = "4";
+		}
+
+		else if (choice_band == "green")
+		{
+			first_band = "5";
+		}
+
+		else if (choice_band == "blue")
+		{
+			first_band = "6";
+		}
+
+		else if (choice_band == "violet")
+		{
+			first_band = "7";
+		}
+
+		else if (choice_band == "grey")
+		{
+			first_band = "8";
+		}
+
+		else if (choice_band == "white")
+		{
+			first_band = "9";
+		}
+
+		//-----------------------------------------------------------
+
+		if (choice_band2 == "black")
+		{
+			second_band = "0";
+		}
+
+		else if (choice_band2 == "brown")
+		{
+			second_band = "1";
+		}
+
+		else if (choice_band2 == "red")
+		{
+			second_band = "2";
+		}
+
+		else if (choice_band2 == "orange")
+		{
+			second_band = "3";
+		}
+
+		else if (choice_band2 == "yellow")
+		{
+			second_band = "4";
+		}
+
+		else if (choice_band2 == "green")
+		{
+			second_band = "5";
+		}
+
+		else if (choice_band2 == "blue")
+		{
+			second_band = "6";
+		}
+
+		else if (choice_band2 == "violet")
+		{
+			second_band = "7";
+		}
+
+		else if (choice_band2 == "grey")
+		{
+			second_band = "8";
+		}
+
+		else if (choice_band2 == "white")
+		{
+			second_band = "9";
+		}
+
+		//-----------------------------------------------------------
+
+		if (choice_band3 == "black")
+		{
+			third_band = 1;
+		}
+
+		else if (choice_band3 == "brown")
+		{
+			third_band = 10;
+		}
+
+		else if (choice_band3 == "red")
+		{
+			third_band = 100;
+		}
+
+		else if (choice_band3 == "orange")
+		{
+			third_band = 1000;
+		}
+
+		else if (choice_band3 == "yellow")
+		{
+			third_band = 10000;
+		}
+
+		else if (choice_band3 == "green")
+		{
+			third_band = 100000;
+		}
+
+		else if (choice_band3 == "blue")
+		{
+			third_band = 1000000;
+		}
+
+		else if (choice_band3 == "violet")
+		{
+			third_band = 10000000;
+		}
+
+		else if (choice_band3 == "gold")
+		{
+			third_band = 0.1;
+		}
+
+		else if (choice_band3 == "silver")
+		{
+			third_band = 0.01;
+		}
+
+		//-----------------------------------------------------------
+
+
+		else if (choice_band4 == "brown")
+		{
+			forth_band_str = "1%";
+		}
+
+		else if (choice_band4 == "red")
+		{
+			forth_band_str = "2%";
+		}
+
+		else if (choice_band4 == "green")
+		{
+			forth_band_str = "0,5%";
+		}
+
+		else if (choice_band4 == "blue")
+		{
+			forth_band_str = "0,25%";
+		}
+
+		else if (choice_band4 == "violet")
+		{
+			forth_band_str = "0,10%";
+		}
+
+		else if (choice_band4 == "grey")
+		{
+			forth_band_str = "0,05%";
+		}
+
+		else if (choice_band4 == "gold")
+		{
+			forth_band_str = "5%";
+		}
+
+		else if (choice_band4 == "silver")
+		{
+			forth_band_str = "10%";
+		}
+
+		bands_plus_str = first_band + second_band;
+		bands_plus = stoi(bands_plus_str);
+
+		total_resistor_result = (bands_plus * third_band);
+
+		cout << "result = " << total_resistor_result << " OHM" << endl;
+		cout << "result = " << total_resistor_result / 1000 << "K OHM" << endl;
+		cout << "tolerance = " << forth_band_str << endl;
+
+
+
+
+	}
+
+	else if (resistors_bands == 5)
+	{
+		for (int i = 0;i < 9; i++)
+		{
+			cout << resistor_shape_2[i] << endl;
+		}
+
+		cout << "enter the first band" << endl;
+		cin >> choice_band;
+		cout << "enter the second band" << endl;
+		cin >> choice_band2;
+		cout << "enter the third band" << endl;
+		cin >> choice_band3;
+		cout << "enter the fourth band" << endl;
+		cin >> choice_band4;
+		cout << "enter the fifth band" << endl;
+		cin >> choice_band5;
+
+
+		if (choice_band == "black")
+		{
+			first_band = "0";
+		}
+
+		else if (choice_band == "brown")
+		{
+			first_band = "1";
+		}
+
+		else if (choice_band == "red")
+		{
+			first_band = "2";
+		}
+
+		else if (choice_band == "orange")
+		{
+			first_band = "3";
+		}
+
+		else if (choice_band == "yellow")
+		{
+			first_band = "4";
+		}
+
+		else if (choice_band == "green")
+		{
+			first_band = "5";
+		}
+
+		else if (choice_band == "blue")
+		{
+			first_band = "6";
+		}
+
+		else if (choice_band == "violet")
+		{
+			first_band = "7";
+		}
+
+		else if (choice_band == "grey")
+		{
+			first_band = "8";
+		}
+
+		else if (choice_band == "white")
+		{
+			first_band = "9";
+		}
+
+		//-----------------------------------------------------------
+
+		if (choice_band2 == "black")
+		{
+			second_band = "0";
+		}
+
+		else if (choice_band2 == "brown")
+		{
+			second_band = "1";
+		}
+
+		else if (choice_band2 == "red")
+		{
+			second_band = "2";
+		}
+
+		else if (choice_band2 == "orange")
+		{
+			second_band = "3";
+		}
+
+		else if (choice_band2 == "yellow")
+		{
+			second_band = "4";
+		}
+
+		else if (choice_band2 == "green")
+		{
+			second_band = "5";
+		}
+
+		else if (choice_band2 == "blue")
+		{
+			second_band = "6";
+		}
+
+		else if (choice_band2 == "violet")
+		{
+			second_band = "7";
+		}
+
+		else if (choice_band2 == "grey")
+		{
+			second_band = "8";
+		}
+
+		else if (choice_band2 == "white")
+		{
+			second_band = "9";
+		}
+
+		//-----------------------------------------------------------
+
+		if (choice_band3 == "black")
+		{
+			third_band_str = "0";
+		}
+
+		else if (choice_band3 == "brown")
+		{
+			third_band_str = "1";
+		}
+
+		else if (choice_band3 == "red")
+		{
+			third_band_str = "2";
+		}
+
+		else if (choice_band3 == "orange")
+		{
+			third_band_str = "3";
+		}
+
+		else if (choice_band3 == "yellow")
+		{
+			third_band_str = "4";
+		}
+
+		else if (choice_band3 == "green")
+		{
+			third_band_str = "5";
+		}
+
+		else if (choice_band3 == "blue")
+		{
+			third_band_str = "6";
+		}
+
+		else if (choice_band3 == "violet")
+		{
+			third_band_str = "7";
+		}
+
+		else if (choice_band3 == "grey")
+		{
+			third_band_str = "8";
+		}
+
+		else if (choice_band3 == "white")
+		{
+			third_band_str = "9";
+		}
+
+		//-----------------------------------------------------------
+
+		if (choice_band4 == "black")
+		{
+			forth_band = 1;
+		}
+
+		else if (choice_band4 == "brown")
+		{
+			forth_band = 10;
+		}
+
+		else if (choice_band4 == "red")
+		{
+			forth_band = 100;
+		}
+
+		else if (choice_band4 == "orange")
+		{
+			forth_band = 1000;
+		}
+
+		else if (choice_band4 == "yellow")
+		{
+			forth_band = 10000;
+		}
+
+		else if (choice_band4 == "green")
+		{
+			forth_band = 100000;
+		}
+
+		else if (choice_band4 == "blue")
+		{
+			forth_band = 1000000;
+		}
+
+		else if (choice_band4 == "violet")
+		{
+			forth_band = 10000000;
+		}
+
+		else if (choice_band4 == "gold")
+		{
+			forth_band = 0.1;
+		}
+
+		else if (choice_band4 == "silver")
+		{
+			forth_band = 0.01;
+		}
+
+		//-----------------------------------------------------------
+
+		if (choice_band5 == "brown")
+		{
+			fifth_band = "1%";
+		}
+
+		else if (choice_band5 == "red")
+		{
+			fifth_band = "2%";
+		}
+
+		else if (choice_band5 == "green")
+		{
+			fifth_band = "0,5%";
+		}
+
+		else if (choice_band5 == "blue")
+		{
+			fifth_band = "0,25%";
+		}
+
+		else if (choice_band5 == "violet")
+		{
+			fifth_band = "0.10%";
+		}
+
+		else if (choice_band5 == "grey")
+		{
+			fifth_band = "0,05%";
+		}
+
+		else if (choice_band5 == "gold")
+		{
+			fifth_band = "5%";
+		}
+
+		else if (choice_band5 == "silver")
+		{
+			fifth_band = "10%";
+		}
+
+
+		bands_plus_str = first_band + second_band + third_band_str;
+		bands_plus = stoi(bands_plus_str);
+
+		total_resistor_result = (bands_plus * forth_band);
+
+		cout << "result = " << total_resistor_result << " OHM" << endl;
+		cout << "result = " << total_resistor_result / 1000 << " K OHM" << endl;
+		cout << "tolerance = " << fifth_band << endl;
+
+		string resistor_choice;
+		cout << "if you want to start the porgram again write (yes) if you wan to exit write (no) " << endl;
+		cin >> resistor_choice;
+
+		if (resistor_choice == "yes" || resistor_choice == "Yes" || resistor_choice == "YES")
+		{
+			resistor_band_calculation();
+		}
+		else if (resistor_choice == "no" || resistor_choice == "No" || resistor_choice == "NO")
+		{
+			exit;
+		}
+
+
+	}
