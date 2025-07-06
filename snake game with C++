@@ -1,0 +1,231 @@
+void logic555();
+void window555();
+
+
+
+char player = 'o';
+int player_y = 6;
+int player_x = 20;
+
+char food = '*';
+int food_y;
+int food_x;
+
+int food_y2;
+int food_x2;
+
+int food_y3;
+int food_x3;
+
+int food_y4;
+int food_x4;
+
+
+
+void setup()
+{
+	srand(time(NULL));
+	food_y = rand() % 16;
+	food_x = rand() % 30;
+
+	food_y2 = rand() % 16;
+	food_x2 = rand() % 30;
+
+	food_y3 = rand() % 16;
+	food_x3 = rand() % 30;
+
+	food_y4 = rand() % 16;
+	food_x4 = rand() % 30;
+
+}
+
+
+void window2()
+{
+	cout << "****************************** snake game ******************************" << endl;
+
+	string window1[16] =
+	{
+		"    -----------------------------",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    |                           |",
+		"    -----------------------------"
+
+
+	};
+	// height = 14 , width = 34   diffrence 4
+	window1[player_y][player_x] = player;
+
+	window1[food_y][food_x] = food;
+	window1[food_y2][food_x2] = food;
+	window1[food_y3][food_x3] = food;
+	window1[food_y4][food_x4] = food;
+
+	for (int i = 0;i < 16;i++)
+	{
+		cout << window1[i] << endl;
+	}
+
+}
+
+void refresh()
+{
+	int score = 0;
+	char input;
+
+	while (true)
+	{
+
+		cout << "your score is = " << score << endl;
+		cout << "move the snake : " << endl;
+
+		if (food_y >= 15 || food_x >= 32 || food_x <= 4 || food_y <= 0)
+		{
+			srand(time(NULL));
+			food_y = rand() % 14;
+			food_x = rand() % 34;
+		}
+
+		if (food_y2 >= 15 || food_x2 >= 32 || food_x2 <= 4 || food_y2 <= 0)
+		{
+			srand(time(NULL));
+			food_y2 = rand() % 14;
+			food_x2 = rand() % 34;
+		}
+
+		if (food_y3 >= 15 || food_x3 >= 32 || food_x3 <= 4 || food_y3 <= 0)
+		{
+			srand(time(NULL));
+			food_y3 = rand() % 14;
+			food_x3 = rand() % 34;
+		}
+
+		if (food_y4 >= 15 || food_x4 >= 32 || food_x4 <= 4 || food_y4 <= 0)
+		{
+			srand(time(NULL));
+			food_y4 = rand() % 14;
+			food_x4 = rand() % 34;
+		}
+
+		cin >> input;
+
+		if (input == 'w')
+		{
+			player_y--;
+		}
+		else if (input == 's')
+		{
+			player_y++;
+		}
+		else if (input == 'd')
+		{
+			player_x++;
+		}
+		else if (input == 'a')
+		{
+			player_x--;
+		}
+
+
+		if (player_x == food_x && player_y == food_y || player_x == food_x2 && player_y == food_y2 || player_x == food_x3 && player_y == food_y3 || player_x == food_x4 && player_y == food_y4)
+		{
+			score++;
+			srand(time(NULL));
+			food_y = rand() % 14;
+			food_x = rand() % 34;
+
+			food_y2 = rand() % 14;
+			food_x2 = rand() % 34;
+
+			food_y3 = rand() % 14;
+			food_x3 = rand() % 34;
+
+			food_y4 = rand() % 14;
+			food_x4 = rand() % 34;
+
+		}
+
+		if (score == 10)
+		{
+			system("cls");
+
+			cout << "    -------------------------" << endl;
+			cout << "    |                       |" << endl;
+			cout << "    |                       |" << endl;
+			cout << "    |                       |" << endl;
+			cout << "    |                       |" << endl;
+			cout << "    |                       |" << endl;
+			cout << "    |                       |" << endl;
+			cout << "    |      CONGRATULATION   |" << endl;
+			cout << "    |           YOU         |" << endl;
+			cout << "    |           WON         |" << endl;
+			cout << "    |                       |" << endl;
+			cout << "    |                       |" << endl;
+			cout << "    |                       |" << endl;
+			cout << "    |                       |" << endl;
+			cout << "    -------------------------" << endl;
+
+			break;
+		}
+
+
+		if (player_y >= 15 || player_x >= 32 || player_y <= 0 || player_x <= 4)
+		{
+			cout << "GAME OVER" << endl;
+			break;
+		}
+
+
+		system("cls");
+		window2();
+	}
+	string retry;
+	cout << "if you want to try again write (yes) , if you want to exit write no" << endl;
+	cin >> retry;
+
+	if (retry == "yes")
+	{
+		system("cls");
+		window2();
+		refresh();
+	}
+
+	else
+	{
+		system("cls");
+		main();
+	}
+
+}
+
+
+int main()
+{
+	cout << "**********************************MENU**********************************" << endl;
+
+	int choice;
+
+	cout << "1) snake game" << endl;
+	cin >> choice;
+
+	if (choice == 1)
+	{
+		system("cls");
+		setup();
+		window2();
+		refresh();
+	
+	return 0;
+}
