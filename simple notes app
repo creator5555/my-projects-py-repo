@@ -1,0 +1,84 @@
+import os
+import time
+
+def create_file():
+    
+    
+    try:
+        file1 = open("text1" , "x")
+        file1.close()
+
+    except:
+        print("file already exists")
+        time.sleep(2)
+        main()
+        
+def write_notes():
+    file1 = open("text1" , "a")
+    bool1 = True
+    while (bool1 == True):
+        print("write down your notes , to end the loop press 5")
+        one_note = input()
+
+        if(one_note == "5"):
+            bool1 = False
+            file1.close()
+            main()
+        else:
+            file1.write(one_note + "\n")
+            continue
+
+def read_notes():
+    list1 = []
+    file1 = open("text1" , "r")
+    list1 = file1.readlines()
+    print(list1)
+    file1.close()
+    main()
+
+def delete():
+    list1 = []
+    file1 = open("text1" , "r")
+    list1 = file1.readlines()
+    print(list1)
+    file1.close()
+
+    print("enter the index of note you want to delete")
+    num2 = int(input())
+
+    del list1[num2]
+    file1 = open("text1" , "w")
+    for i in list1:
+        file1.writelines(i)
+
+    file1.close()
+
+    print("-------------------------------")
+    file1 = open("text1" , "r")
+    list1 = file1.readlines()
+    print(list1)
+    file1.close()
+    time.sleep(2)
+    main()
+
+
+
+def main():
+    
+    print("1- to create the file if it doesnot exist")
+    print("2- to write down the notes")
+    print("3- to read the notes")
+    print("4- to delete the tasks you have finished")
+    user_choice1 = int(input())
+
+    if(user_choice1 == 1):
+        create_file()
+    elif(user_choice1 == 2):
+        write_notes()
+    elif(user_choice1 == 3):
+        read_notes()
+    elif(user_choice1 == 4):
+        delete()
+
+
+main()
