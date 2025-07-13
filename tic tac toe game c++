@@ -1,0 +1,178 @@
+#include <iostream>
+#include <string>
+#include <string.h>
+#include <stdio.h>      
+#include <stdlib.h>    
+#include <time.h>       
+#include <cmath>
+#include <Windows.h>
+
+using namespace std;
+
+
+int square1_x = 4;
+int square1_y = 3;
+char player1 = ' ';
+
+
+int square2_x = 15;
+int square2_y = 3;
+char player2 = ' ';
+
+
+int square3_x = 28;
+int square3_y = 3;
+char player3 = ' ';
+
+
+int square4_x = 4;
+int square4_y = 7;
+char player4 = ' ';
+
+int square5_x = 15;
+int square5_y = 7;
+char player5 = ' ';
+
+
+int square6_x = 28;
+int square6_y = 7;
+char player6 = ' ';
+
+
+int square7_x = 4;
+int square7_y = 11;
+char player7 = ' ';
+
+
+int square8_x = 15;
+int square8_y = 11;
+char player8 = ' ';
+
+
+int square9_x = 28;
+int square9_y = 11;
+char player9 = ' ';
+
+
+
+void window()
+{
+	string window1[14] =
+	{
+		"----------------------------------",
+		"|        |            |           |",
+		"|        |            |           |",
+		"|        |            |           |",
+		"|        |            |           |",
+		"|--------| ---------- |-----------|",
+		"|        |            |           |",
+		"|        |            |           |",
+		"|        |            |           |",
+		"|--------|----------- |-----------|",
+		"|        |            |           |",
+		"|        |            |           |",
+		"|        |            |           |",
+		"|---------------------------------|"
+
+	};
+	//width = 35 || height = 13
+
+	window1[square1_y][square1_x] = player1;
+	window1[square2_y][square2_x] = player2;
+	window1[square3_y][square3_x] = player3;
+	window1[square4_y][square4_x] = player4;
+	window1[square5_y][square5_x] = player5;
+	window1[square6_y][square6_x] = player6;
+	window1[square7_y][square7_x] = player7;
+	window1[square8_y][square8_x] = player8;
+	window1[square9_y][square9_x] = player9;
+
+
+	for (int i = 0;i < 14; i++)
+	{
+		cout << window1[i] << endl;
+	}
+
+}
+
+void logic()
+{
+    int choice6;
+    cout << "To start the game, press 1" << endl;
+    cin >> choice6;
+    if (choice6 != 1)
+        return;
+
+    char currentPlayer = 'X';
+
+    while (true)
+    {
+        int playerChoice;
+
+        cout << currentPlayer << " player's turn" << endl;
+        cout << "Choose a square (1-9): ";
+        cin >> playerChoice;
+
+        // Validate the input
+        if (playerChoice < 1 || playerChoice > 9)
+        {
+            cout << "Invalid choice. Choose a number between 1 and 9." << endl;
+            continue;
+        }
+
+        // Map player choice to corresponding square in the window1 array
+        char* currentPlayerPtr = nullptr;
+        switch (playerChoice)
+        {
+        case 1: currentPlayerPtr = &player1; break;
+        case 2: currentPlayerPtr = &player2; break;
+        case 3: currentPlayerPtr = &player3; break;
+        case 4: currentPlayerPtr = &player4; break;
+        case 5: currentPlayerPtr = &player5; break;
+        case 6: currentPlayerPtr = &player6; break;
+        case 7: currentPlayerPtr = &player7; break;
+        case 8: currentPlayerPtr = &player8; break;
+        case 9: currentPlayerPtr = &player9; break;
+        }
+
+        // Check if the chosen square is empty
+        if (*currentPlayerPtr == ' ')
+        {
+            *currentPlayerPtr = currentPlayer;
+            window(); // Update the game window
+
+            // Check for a winner
+            if ((player1 == currentPlayer && player2 == currentPlayer && player3 == currentPlayer) ||
+                (player4 == currentPlayer && player5 == currentPlayer && player6 == currentPlayer) ||
+                (player7 == currentPlayer && player8 == currentPlayer && player9 == currentPlayer) ||
+                (player1 == currentPlayer && player4 == currentPlayer && player7 == currentPlayer) ||
+                (player2 == currentPlayer && player5 == currentPlayer && player8 == currentPlayer) ||
+                (player3 == currentPlayer && player6 == currentPlayer && player9 == currentPlayer) ||
+                (player1 == currentPlayer && player5 == currentPlayer && player9 == currentPlayer) ||
+                (player3 == currentPlayer && player5 == currentPlayer && player7 == currentPlayer))
+            {
+                cout << "Congratulations, " << currentPlayer << " player won!" << endl;
+                break;
+            }
+
+            // Switch to the next player
+            currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+        }
+        else
+        {
+            cout << "Invalid move. That square is already taken." << endl;
+            continue;
+        }
+    }
+}
+
+
+int main()
+{
+	window();
+	logic();
+
+
+
+	return 0;
+}
