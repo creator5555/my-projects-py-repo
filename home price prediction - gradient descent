@@ -1,0 +1,27 @@
+import pandas as pd
+import numpy as np
+
+data1 = pd.read_csv("C:\\5\\programming\\python\\Housing.csv")
+# print(data1.head())
+y = data1["price"].values
+x = data1["area"].values
+
+w = 0
+b = 0
+alpha = 0.000000001
+n = len(x)
+
+for i in range(10000):
+
+    y_predicted = w * x + b
+    loss = y - y_predicted
+
+    dw = (-2/n) * (np.sum(x * loss))
+    db = (-2/n) * (np.sum(loss))
+
+    w = w - alpha * dw
+    b = b - alpha * db
+
+    y_predicted = w * x + b  
+
+print(y_predicted)
