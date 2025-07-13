@@ -1,0 +1,79 @@
+#include <iostream>
+using namespace std;
+
+
+void random_game()
+{
+
+	string start;
+	int tries = 3;
+	cout << "-------------------------------------RANDOM NUMBER GAME--------------------------------------" << "\n";
+	cout << "if you want to start write (yes) : " << endl;
+	cin >> start;
+
+	if (start == "yes")
+	{
+		while (true)
+		{
+			int nums[10] = { 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 };
+			srand(time(0));
+			int rand_num = rand() % 10;
+
+			int user_num;
+			cout << "choose random number : " << endl;
+			cin >> user_num;
+
+			if (user_num == rand_num)
+			{
+				cout << "YOU HAVE WON" << "\n";
+				break;
+			}
+			else if (user_num != rand_num)
+			{
+				tries -= 1;
+				if (tries == 0)
+				{
+					cout << "you have lost" << endl;
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		return;
+	}
+
+
+
+}
+
+
+
+
+
+
+
+
+int main()
+{
+	while(true)
+	{
+		random_game();
+		int try2;
+		cout << "if you want to try again press 1" << endl;
+		cin >> try2;
+		if (try2 == 1)
+		{
+			random_game();
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+
+
+	return 0;
+}
