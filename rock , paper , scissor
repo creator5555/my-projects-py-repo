@@ -1,0 +1,86 @@
+#include <iostream>
+#include <string>
+#include <string.h>
+using namespace std;
+
+
+void game()
+{
+
+    string start;
+    cout << "to start the game write (yes)" << endl;
+    cin >> start;
+
+    if (start == "yes" || start == "YES" || start == "Yes")
+    {
+        while (true)
+        {
+            string games[3] = { "rock" , "paper" , "scissor" };
+            srand(time(0));
+            int rand_game = rand() % 3;
+
+            string user_game;
+            cout << "choose from (rock , paper , scissor)" << endl;
+            cin >> user_game;
+
+            if(user_game == games[rand_game])
+            {
+                cout << "no one won" << endl;
+            }
+            else if(user_game == "rock" && games[rand_game] == "paper")
+            {
+                cout << "you have lost nigga" << endl;
+            }
+            else if (user_game == "rock" && games[rand_game] == "scissor")
+            {
+                cout << "you have won mother fucker" << endl;
+            }
+            else if (user_game == "paper" && games[rand_game] == "rock")
+            {
+                cout << "you have won bitch" << endl;
+            }
+            else if (user_game == "paper" && games[rand_game] == "scissor")
+            {
+                cout << "you have lost asshole" << endl;
+            }
+            else if (user_game == "scissor" && games[rand_game] == "paper")
+            {
+                cout << "you have won idiot" << endl;
+            }
+            else if (user_game == "scissor" && games[rand_game] == "rock")
+            {
+                cout << "you have lost son of the bitch" << endl;
+            }
+            else
+            {
+                cout << "something went wrong" << endl;
+            }
+        }
+
+
+
+
+
+
+    }
+    else
+    {
+        return;
+    }
+
+
+
+}
+
+
+
+
+
+
+int main()
+{
+    game();
+
+
+    return 0;
+}
