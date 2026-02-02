@@ -1,0 +1,162 @@
+import tensorflow as tf
+import keras
+import numpy as np
+import os
+from keras import layers
+import hashlib
+import matplotlib.pyplot as plt
+from sklearn.metrics import classification_report, confusion_matrix
+import seaborn as sns
+from sklearn.metrics import roc_curve, auc
+
+dataset_path = "C:\\Users\\ascom\\Desktop\\self study\\AI PROJECTS PROJECTS\\datasets\\archive (4)\\Training"
+model_path = "C:\\Users\\ascom\\Desktop\\self study\\AI PROJECTS PROJECTS\\brain cancer detection DL\\brain_tumor_model.keras"
+img_size = (180 , 180)
+batch_size = 32
+
+def drop_duplicates(folder_path):
+    hashes = {}
+    duplicates_count = 0
+    
+    for root, dirs, files in os.walk(folder_path):
+        for f in files:
+            path = os.path.join(root, f)
+            
+            file_hash = hashlib.md5(open(path, 'rb').read()).hexdigest()
+            
+            if file_hash in hashes:
+                
+                os.remove(path) 
+                duplicates_count += 1
+            else:
+                
+                hashes[file_hash] = path
+                
+    return duplicates_count
+
+
+deleted_count = drop_duplicates(dataset_path)
+print("Identified and dropped" , deleted_count , "duplicate images.")
+
+
+plt.bar(['Healthy', 'Tumor'], [2000, 4000], color=['green', 'red'])
+plt.title("Class Balance")
+plt.show()
+
+if os.path.exists(model_path):
+    print("model found : ")
+    model = keras.models.load_model(model_path)
+
+else:
+    train_ds, val_ds = keras.utils.image_dataset_from_directory(
+            dataset_path,
+            validation_split=0.2,
+            subset="both",
+            seed=1337,
+            image_size=img_size,
+            batch_size=batch_size,
+        )
+
+    model = keras.Sequential()
+    model.add(keras.Input(shape=(180 , 180 , 3)))
+
+    model.add(layers.RandomFlip("horizontal"))
+    model.add(layers.RandomRotation(0.1))
+    model.add(layers.RandomZoom(0.1))
+    model.add(layers.Rescaling(1.0 / 255))
+
+    model.add(layers.Conv2D(32, kernel_size=(3, 3), padding='same'))
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation('relu'))
+    model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+
+    model.add(layers.Conv2D(64, kernel_size=(3, 3), padding='same'))
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation('relu'))
+    model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+    
+    model.add(layers.Conv2D(128, kernel_size=(3, 3), padding='same'))
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation('relu'))
+    model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+    
+    model.add(layers.Conv2D(256, kernel_size=(3, 3), padding='same'))
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation('relu'))
+    model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+
+    model.add(layers.Dropout(0.3)) 
+    model.add(layers.Flatten())
+    model.add(layers.Dense(1, activation="sigmoid"))
+
+    optimizer = keras.optimizers.Adam(learning_rate=0.0001)
+    model.compile(optimizer=optimizer, loss="binary_crossentropy", metrics=["accuracy"])
+
+    
+    print("training..............")
+    class_weight = {0: 1.5, 1: 0.75}
+    training = model.fit(train_ds, epochs=45, validation_data=val_ds,class_weight=class_weight)
+
+    os.makedirs(model_path , exist_ok=True)
+    model.save(model_path)
+    print(" Model is saved to the path successfully")
+
+train_ds, val_ds = keras.utils.image_dataset_from_directory(
+            dataset_path,
+            validation_split=0.2,
+            subset="both",
+            seed=1337,
+            image_size=img_size,
+            batch_size=batch_size,
+        )
+
+y_true = np.concatenate([y for x, y in val_ds], axis=0)
+y_pred_probs = model.predict(val_ds)
+y_pred = (y_pred_probs > 0.5).astype("int32")
+
+
+cm = confusion_matrix(y_true, y_pred)
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.title("Step 8: Confusion Matrix")
+plt.show()
+
+
+print(classification_report(y_true, y_pred, target_names=['Healthy', 'Tumor']))
+
+
+fpr, tpr, _ = roc_curve(y_true, y_pred_probs)
+roc_auc = auc(fpr, tpr)
+
+plt.figure()
+plt.plot(fpr, tpr, label=f'ROC curve (area = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], 'k--')
+plt.title("Step 8: ROC Curve")
+plt.legend(loc="lower right")
+plt.show()
+
+img_path_input = input("Paste the image path here: ").strip('"')
+
+if os.path.exists(img_path_input):
+    
+    img = keras.utils.load_img(img_path_input, target_size=img_size)
+        
+    
+    img_array = keras.utils.img_to_array(img)
+    img_array = tf.expand_dims(img_array, 0)
+
+    
+    prediction = model.predict(img_array)
+    score = prediction[0][0]
+
+    
+    print(" Result = " , score)
+        
+    if score > 0.5:
+        print("TUMOR DETECTED !")
+        print("score = " , score*100)
+    else:
+        print("HEALTHY brain , no tumers detected")
+        print("score = " , (1 - score)*100)
+
+else:
+    print("Error")
