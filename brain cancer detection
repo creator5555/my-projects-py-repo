@@ -15,6 +15,7 @@ model_path = "C:\\Users\\ascom\\Desktop\\self study\\AI PROJECTS PROJECTS\\brain
 img_size = (180 , 180)
 batch_size = 32
 
+
 def drop_duplicates(folder_path):
     hashes = {}
     duplicates_count = 0
@@ -35,9 +36,20 @@ def drop_duplicates(folder_path):
                 
     return duplicates_count
 
+
 deleted_count = drop_duplicates(dataset_path)
 print("Identified and dropped" , deleted_count , "duplicate images.")
-print("-----------------------------------------------------------------------------")
+
+train_ds, val_ds = keras.utils.image_dataset_from_directory(
+    dataset_path,
+    validation_split=0.2,
+    subset="both",
+    shuffle=True,
+    seed=1337,
+    image_size=img_size,
+    batch_size=batch_size,
+)
+
 
 healthy_folder = os.path.join(dataset_path, "Healthy")
 tumor_folder = os.path.join(dataset_path, "Tumor")
@@ -49,7 +61,6 @@ print("number of images after the drop : ")
 print("Total Healthy Images = " , healthy_count)
 print("Total Tumor Images = " , tumor_count)
 
-# Calculate the percentage to check the 70/30 rule from Step 6
 total = healthy_count + tumor_count
 if total > 0:
     healthy_pct = (healthy_count / total) * 100
@@ -57,16 +68,6 @@ if total > 0:
     print(f"\nDistribution: {healthy_pct:.1f}% Healthy / {tumor_pct:.1f}% Tumor")
 
 print("-----------------------------------------------------------------------------")
-train_ds, val_ds = keras.utils.image_dataset_from_directory(
-            dataset_path,
-            validation_split=0.2,
-            subset="both",
-            seed=1337,
-            image_size=img_size,
-            batch_size=batch_size,
-        )
-
-
 
 plt.bar(['Healthy', 'Tumor'], [healthy_count, tumor_count], color=['green', 'red'])
 plt.title("Class Balance")
@@ -98,14 +99,6 @@ if os.path.exists(model_path):
     model = keras.models.load_model(model_path)
 
 else:
-    train_ds, val_ds = keras.utils.image_dataset_from_directory(
-            dataset_path,
-            validation_split=0.2,
-            subset="both",
-            seed=1337,
-            image_size=img_size,
-            batch_size=batch_size,
-        )
 
     model = keras.Sequential()
     model.add(keras.Input(shape=(180 , 180 , 3)))
@@ -174,13 +167,15 @@ else:
     print(" Model is saved to the path successfully")
 
 train_ds, val_ds = keras.utils.image_dataset_from_directory(
-            dataset_path,
-            validation_split=0.2,
-            subset="both",
-            seed=1337,
-            image_size=img_size,
-            batch_size=batch_size,
-        )
+    dataset_path,
+    validation_split=0.2,
+    subset="both",
+    shuffle=False,
+    seed=1337,
+    image_size=img_size,
+    batch_size=batch_size,
+)
+
 
 y_true = np.concatenate([y for x, y in val_ds], axis=0)
 y_pred_probs = model.predict(val_ds)
@@ -210,8 +205,8 @@ def func():
     if os.path.exists(img_path_input):
         
         img = keras.utils.load_img(img_path_input, target_size=img_size)
-            
-        img_array = keras.utils.img_to_array(img) / 255.0
+        
+        img_array = keras.utils.img_to_array(img)
         img_array = tf.expand_dims(img_array, 0)
         
         
@@ -237,7 +232,7 @@ while flag:
     func()
 
     print("do you want to send another image ?")
-    user = input()
+    user = input("Do you want to send another image? (yes/no) : ").strip().lower()
 
     if user == "yes":
         continue
