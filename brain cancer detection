@@ -9,6 +9,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 import seaborn as sns
 from sklearn.metrics import roc_curve, auc
 
+flag = True
 dataset_path = "C:\\Users\\ascom\\Desktop\\self study\\AI PROJECTS PROJECTS\\datasets\\archive (4)\\Training"
 model_path = "C:\\Users\\ascom\\Desktop\\self study\\AI PROJECTS PROJECTS\\brain cancer detection DL\\brain_tumor_model.keras"
 img_size = (180 , 180)
@@ -34,14 +35,63 @@ def drop_duplicates(folder_path):
                 
     return duplicates_count
 
-
 deleted_count = drop_duplicates(dataset_path)
 print("Identified and dropped" , deleted_count , "duplicate images.")
+print("-----------------------------------------------------------------------------")
+
+healthy_folder = os.path.join(dataset_path, "Healthy")
+tumor_folder = os.path.join(dataset_path, "Tumor")
+
+healthy_count = len(os.listdir(healthy_folder)) if os.path.exists(healthy_folder) else 0
+tumor_count = len(os.listdir(tumor_folder)) if os.path.exists(tumor_folder) else 0
+
+print("number of images after the drop : ")
+print("Total Healthy Images = " , healthy_count)
+print("Total Tumor Images = " , tumor_count)
+
+# Calculate the percentage to check the 70/30 rule from Step 6
+total = healthy_count + tumor_count
+if total > 0:
+    healthy_pct = (healthy_count / total) * 100
+    tumor_pct = (tumor_count / total) * 100
+    print(f"\nDistribution: {healthy_pct:.1f}% Healthy / {tumor_pct:.1f}% Tumor")
+
+print("-----------------------------------------------------------------------------")
+train_ds, val_ds = keras.utils.image_dataset_from_directory(
+            dataset_path,
+            validation_split=0.2,
+            subset="both",
+            seed=1337,
+            image_size=img_size,
+            batch_size=batch_size,
+        )
 
 
-plt.bar(['Healthy', 'Tumor'], [2000, 4000], color=['green', 'red'])
+
+plt.bar(['Healthy', 'Tumor'], [healthy_count, tumor_count], color=['green', 'red'])
 plt.title("Class Balance")
 plt.show()
+
+plt.figure(figsize=(10, 10))
+for images, labels in train_ds.take(1):
+    for i in range(4):
+        plt.subplot(2, 2, i + 1)
+        plt.imshow(images[i].numpy().astype("uint8"))
+        plt.title("Tumor" if labels[i] == 1 else "Healthy")
+        plt.axis("off")
+plt.suptitle("Random images from Dataset")
+plt.show()
+
+plt.figure(figsize=(6, 4))
+sample_batch = next(iter(train_ds))[0].numpy().flatten()
+plt.hist(sample_batch, bins=50, color='gray')
+plt.title("Pixel Intensity Distribution (Univariate)")
+plt.xlabel("Pixel Value")
+plt.ylabel("Frequency")
+plt.show()
+
+
+
 
 if os.path.exists(model_path):
     print("model found : ")
@@ -59,12 +109,12 @@ else:
 
     model = keras.Sequential()
     model.add(keras.Input(shape=(180 , 180 , 3)))
-
+    #-----------------------------------------------------------------------------------
     model.add(layers.RandomFlip("horizontal"))
     model.add(layers.RandomRotation(0.1))
     model.add(layers.RandomZoom(0.1))
     model.add(layers.Rescaling(1.0 / 255))
-
+    #-----------------------------------------------------------------------------------
     model.add(layers.Conv2D(32, kernel_size=(3, 3), padding='same'))
     model.add(layers.BatchNormalization())
     model.add(layers.Activation('relu'))
@@ -97,7 +147,29 @@ else:
     class_weight = {0: 1.5, 1: 0.75}
     training = model.fit(train_ds, epochs=45, validation_data=val_ds,class_weight=class_weight)
 
-    os.makedirs(model_path , exist_ok=True)
+    
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(training.history['accuracy'], label='Training Accuracy')
+    plt.plot(training.history['val_accuracy'], label='Validation Accuracy')
+    plt.title('Deep Custom Model - Training vs Validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(training.history['loss'], label='Training Loss')
+    plt.plot(training.history['val_loss'], label='Validation Loss')
+    plt.title('Deep Custom Model - Training vs Validation Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+    os.makedirs(os.path.dirname(model_path), exist_ok=True)
     model.save(model_path)
     print(" Model is saved to the path successfully")
 
@@ -114,15 +186,12 @@ y_true = np.concatenate([y for x, y in val_ds], axis=0)
 y_pred_probs = model.predict(val_ds)
 y_pred = (y_pred_probs > 0.5).astype("int32")
 
-
 cm = confusion_matrix(y_true, y_pred)
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-plt.title("Step 8: Confusion Matrix")
+plt.title("Confusion Matrix")
 plt.show()
 
-
 print(classification_report(y_true, y_pred, target_names=['Healthy', 'Tumor']))
-
 
 fpr, tpr, _ = roc_curve(y_true, y_pred_probs)
 roc_auc = auc(fpr, tpr)
@@ -130,33 +199,50 @@ roc_auc = auc(fpr, tpr)
 plt.figure()
 plt.plot(fpr, tpr, label=f'ROC curve (area = {roc_auc:.2f})')
 plt.plot([0, 1], [0, 1], 'k--')
-plt.title("Step 8: ROC Curve")
+plt.title("ROC Curve")
 plt.legend(loc="lower right")
 plt.show()
 
-img_path_input = input("Paste the image path here: ").strip('"')
 
-if os.path.exists(img_path_input):
-    
-    img = keras.utils.load_img(img_path_input, target_size=img_size)
+def func():
+    img_path_input = input("Paste the image path here: ").strip('"')
+
+    if os.path.exists(img_path_input):
         
-    
-    img_array = keras.utils.img_to_array(img)
-    img_array = tf.expand_dims(img_array, 0)
-
-    
-    prediction = model.predict(img_array)
-    score = prediction[0][0]
-
-    
-    print(" Result = " , score)
+        img = keras.utils.load_img(img_path_input, target_size=img_size)
+            
+        img_array = keras.utils.img_to_array(img) / 255.0
+        img_array = tf.expand_dims(img_array, 0)
         
-    if score > 0.5:
-        print("TUMOR DETECTED !")
-        print("score = " , score*100)
+        
+        prediction = model.predict(img_array)
+        score = prediction[0][0]
+
+        
+        print(" Result = " , score)
+            
+        if score > 0.5:
+            print("TUMOR DETECTED !")
+            print("score = " , score*100)
+        else:
+            print("HEALTHY brain , no tumers detected")
+            print("score = " , (1 - score)*100)
+
     else:
-        print("HEALTHY brain , no tumers detected")
-        print("score = " , (1 - score)*100)
+        print("Error")
 
-else:
-    print("Error")
+
+while flag:
+
+    func()
+
+    print("do you want to send another image ?")
+    user = input()
+
+    if user == "yes":
+        continue
+    else:
+        flag = False
+
+
+
